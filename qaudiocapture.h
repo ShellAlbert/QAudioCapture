@@ -15,11 +15,17 @@
 #include <QTreeWidget>
 #include <QIODevice>
 #include <QLabel>
+enum
+{
+    CAP_SPLIT_BY_FILE_SIZE=0,
+    CAP_SPLIT_BY_TIME_MSEC=1,
+};
+class QAudioCapture;
 class ZBuffer:public QBuffer
 {
     Q_OBJECT
 public:
-    ZBuffer();
+    ZBuffer(QAudioCapture *cap);
     ~ZBuffer();
 protected:
     qint64 writeData(const char *data, qint64 len);
@@ -32,11 +38,12 @@ private:
     qint32 m_fileNameIndex;
     bool m_bNewFile;
     qint32 m_nWrBytes;
+private:
+    QAudioCapture *m_cap;
 };
 class QAudioCapture : public QWidget
 {
     Q_OBJECT
-
 public:
     QAudioCapture(QWidget *parent = 0);
     ~QAudioCapture();
@@ -47,6 +54,7 @@ private slots:
     void ZSlotStart();
     void ZSlotNotify();
     void ZSlotCfg();
+    void ZSlotOpenDir();
     void ZSlotShowMsg(QString msg);
     void ZSlotNewFileGenerated(QString fileName,QString fileSize,QString createTime);
 private:
@@ -56,12 +64,13 @@ private:
     QToolButton *m_tbAddDev;
     QToolButton *m_tbStart;
     QToolButton *m_tbCfg;
+    QToolButton *m_tbOpenDir;
     QLabel *m_llEscapeMS;
 
     QTreeWidget *m_tree;
     QTextEdit *m_teLog;
     QVBoxLayout *m_vLayout;
-private:
+public:
     bool m_bHWOkay;
     QAudioDeviceInfo audioDevInfo;
     QAudioFormat audioFmt;
@@ -69,8 +78,14 @@ private:
     QFile *outFile;
     ZBuffer *bufDevice;
     QByteArray *baPCMData;
-    qint32 m_escapeMSec;
     QString m_HWName;
+
+public:
+    qint32 m_escapeMSec;
+    qint32 m_splitByWhat;
+    qint32 m_nSplitFileSize;
+    qint32 m_nSplitTimeMSec;
+    bool m_bCapturing;
 };
 
 #endif // QAUDIOCAPTURE_H

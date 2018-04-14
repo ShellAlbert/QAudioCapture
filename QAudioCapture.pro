@@ -27,12 +27,14 @@ SOURCES += \
         main.cpp \
         qaudiocapture.cpp \
     zlistaudioinputdialog.cpp \
-    zaudiofmtdialog.cpp
+    zaudiofmtdialog.cpp \
+    zcfgdialog.cpp
 
 HEADERS += \
         qaudiocapture.h \
     zlistaudioinputdialog.h \
-    zaudiofmtdialog.h
+    zaudiofmtdialog.h \
+    zcfgdialog.h
 
 RESOURCES += \
     qcapres.qrc
